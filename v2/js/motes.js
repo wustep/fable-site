@@ -193,8 +193,8 @@
     // ---- the night sky turns, slowly
     const rc = Math.cos(S.skyRot), rs = Math.sin(S.skyRot);
     const cC = portrait ? [[0.3, 0.13], [0.7, 0.31], [0.34, 0.5]] : [[0.2, 0.3], [0.5, 0.23], [0.8, 0.31]];
-    const cScale = m0 * (portrait ? 0.15 : 0.15);
-    const repelR = m0 * (0.13 + 0.13 * (S.rush || 0));
+    const cScale = m0 * 0.15;
+    const repelR = m0 * (0.13 + 0.13 * S.rush);
     for (const w of wins) w.target = 0;
     const spinBoost = 5 * Math.exp(-(t - (S.clickT || -99)) * 2.2);
     compAngle += (1.1 + spinBoost) * S.dt;
@@ -353,7 +353,6 @@
       w.met = w.target > 0.5;
       w.glow += (w.target - w.glow) * Math.min(1, 0.03 * f);
     }
-    S.flockX = hc[0]; S.flockY = hc[1];
   };
 
   function wings(ctx, S, mirrorY, squash) {

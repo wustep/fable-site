@@ -109,8 +109,8 @@
       ctx.beginPath();
       ctx.arc(sx, sy, sr, 0, TAU);
       ctx.fill();
-      S.sunX = sx; S.sunY = sy; S.sunUp = sy < S.horizonY + sr ? 1 : 0;
-    } else S.sunUp = 0;
+      S.sunX = sx;
+    }
 
     // clouds: stacked paper pills, each with the shadow it casts on the sky behind
     const cw = ss(0.4, 0.5, p) * (1 - ss(0.84, 0.92, p));

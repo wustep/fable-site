@@ -209,7 +209,7 @@
     if (wA < 0.02) return;
 
     // light on open water: the sun's road by day, a scatter of starlight by night
-    const sunny = S.sunUp ? 1 : 0, night = S.night;
+    const sunny = ss(0.385, 0.41, p) * (1 - ss(0.74, 0.8, p)), night = S.night; // (eased, so the glitter drifts apart as the sun goes, rather than jumping)
     const warm = ss(0.69, 0.77, p);
     const gc = mixc(mixc([255, 244, 214], [255, 186, 120], warm), [190, 205, 255], night);
     const sx = S.sunX || W * 0.5;

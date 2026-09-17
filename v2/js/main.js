@@ -8,7 +8,7 @@
   const dots = document.getElementById('dots');
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const S = { W: 1, H: 1, dpr: 1, t: 0, dt: 0.016, p: 0, px: -1e4, py: -1e4, pActive: 0, still: 0, clickT: -99, frame: 0, flockX: -1e5, flockY: 0, sunX: 0, sunUp: 0 };
+  const S = { W: 1, H: 1, dpr: 1, t: 0, dt: 0.016, p: 0, px: -1e4, py: -1e4, pActive: 0, still: 0, rush: 0, clickT: -99, frame: 0, sunX: 0 };
   const ripples = [];
   const STOPS = [0.0, 0.2, 0.43, 0.62, 0.8, 1.0];
 
@@ -100,7 +100,7 @@
     S.dt = dt; S.t += dt; S.frame++;
 
     // left alone, the journey walks itself
-    if (!reduce && !held && S.t > lastInput + (S.t < 12 ? 6 : 0) && targetP() < 0.999) {
+    if (!reduce && !held && S.t > lastInput + (S.t < 10 ? 4.5 : 0) && targetP() < 0.999) {
       if (auto === 0) autoY = window.scrollY;
       auto = Math.min(1, auto + dt * 0.4);
       autoY += (maxScroll() / 210) * dt * auto;
@@ -114,7 +114,7 @@
     S.pActive += (here - S.pActive) * (1 - Math.exp(-dt * (here ? 6 : 1.2)));
     S.still += (quiet - S.still) * (1 - Math.exp(-dt * (quiet ? 1.6 : 3)));
     // how briskly the hand is moving: run it through the lights and they part like water
-    S.rush = (S.rush || 0) + (Math.min(1, swipe / dt / 1800) - (S.rush || 0)) * (1 - Math.exp(-dt * 5));
+    S.rush += (Math.min(1, swipe / dt / 1800) - S.rush) * (1 - Math.exp(-dt * 5));
     swipe = 0;
 
     V.phase(S);

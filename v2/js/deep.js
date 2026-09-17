@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   const V = window.V;
-  const { clamp, lerp, ss, hex, mixc, css, rng, TAU } = V;
+  const { clamp, ss, hex, mixc, css, rng, TAU } = V;
   const world = V.world;
   const deep = (V.deep = {});
 
@@ -179,7 +179,7 @@
       hz.addColorStop(1, 'rgba(255,160,100,0)');
       ctx.fillStyle = hz;
       ctx.fillRect(0, fy - H * 0.05, W, H * 0.14);
-      const warm = ['255,196,120', '255,150,110', '255,224,170', '255,178,140'];
+      const warm = ['255,180,100', '255,134,92', '255,212,150', '255,158,116'];
       for (let b = 0; b < 4; b++) {
         ctx.beginPath();
         for (const e of embers) if (e.b === b) {
@@ -228,7 +228,7 @@
 
   // also falls, faintly, from the night sky at the very end: it begins again
   deep.snow = function (ctx, S, alpha, settle) {
-    const t = S.t, span = H * 1.3, nSnow = Math.round(snow.length * V.clamp((W * H) / 1.2e6, 0.4, 1)); // fewer on small screens, so it stays snow and not rain
+    const t = S.t, span = H * 1.3, nSnow = Math.round(snow.length * clamp((W * H) / 1.2e6, 0.4, 1)); // fewer on small screens, so it stays snow and not rain
     ctx.lineWidth = settle ? 1 : 1.3;
     ctx.lineCap = 'round';
     for (let b = 0; b < 3; b++) {
