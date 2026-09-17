@@ -23,3 +23,5 @@ Static files, no build step. Open `index.html` directly, or serve the folder:
 `_inspiration/` holds the reference frames the visual language was drawn from.
 
 Honours `prefers-reduced-motion` (everything renders fully drawn, no sway or grain).
+
+A second, separate wordless site lives in [`v2/`](v2/) — open `v2/index.html`.
