@@ -271,7 +271,8 @@
         const y = world.ridgeY(l, ft.x, S);
         if (y > S.horizonY - 2) continue;
         ctx.fillStyle = tint(ft.tone, l, false, S);
-        ctx.beginPath(); ctx.arc(ft.x, y - ft.r * 0.4, ft.r, 0, TAU); ctx.fill();
+        const fr = ft.r * ss(0.1, 0.7, S.farRise); // treetops come over the horizon with the land, not before it
+        ctx.beginPath(); ctx.arc(ft.x, y - fr * 0.4, fr, 0, TAU); ctx.fill();
       }
     }
     const minY = ridgePath(ctx, l, S, 0);

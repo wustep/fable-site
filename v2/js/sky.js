@@ -134,8 +134,8 @@
 
     if (S.night > 0.6) {
       // now and then, one lets go
-      const slot = Math.floor(t / 9), r = rng(slot * 7919 + 13), t0 = slot * 9 + r() * 5, a = (t - t0) / 0.9;
-      if (a > 0 && a < 1 && r() < 0.75) {
+      const slot = Math.floor(t / 13), r = rng(slot * 7919 + 13), t0 = slot * 13 + r() * 8, a = (t - t0) / 0.9;
+      if (a > 0 && a < 1 && r() < 0.7) {
         const dir = r() < 0.5 ? -1 : 1, ang = 0.3 + r() * 0.5, L = Math.min(W, H) * 0.4;
         const x0 = W * (0.15 + r() * 0.7), y0 = H * (0.04 + r() * 0.3), e = easeOut(a);
         const hx = x0 + Math.cos(ang) * dir * L * e, hy = y0 + Math.sin(ang) * L * e;
@@ -150,7 +150,7 @@
       }
       // and small marks begin to fall again: what was made tonight becomes the floor someone else wakes on
       const again = ss(0.955, 1, p);
-      if (again > 0.01) V.deep.snow(ctx, S, 0.42 * again, false);
+      if (again > 0.01) V.deep.snow(ctx, S, 0.95 * again, false);
     }
   };
 })();

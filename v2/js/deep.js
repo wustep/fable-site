@@ -229,7 +229,7 @@
   // also falls, faintly, from the night sky at the very end: it begins again
   deep.snow = function (ctx, S, alpha, settle) {
     const t = S.t, span = H * 1.3, nSnow = Math.round(snow.length * V.clamp((W * H) / 1.2e6, 0.4, 1)); // fewer on small screens, so it stays snow and not rain
-    ctx.lineWidth = 1;
+    ctx.lineWidth = settle ? 1 : 1.3;
     ctx.lineCap = 'round';
     for (let b = 0; b < 3; b++) {
       ctx.beginPath();
@@ -242,7 +242,7 @@
         const x = m.x * W + Math.sin(t * 0.4 + m.ph) * 14 * par;
         if (settle && y > world.floorBase(m.land, x) + world.floorShift(m.land, S) + 6) continue;
         if (!settle && y > S.horizonY) continue;
-        world.markPath(ctx, m.type, x, y, m.s * par, m.rot + t * 0.15 * (m.b - 1));
+        world.markPath(ctx, m.type, x, y, m.s * par * (settle ? 1 : 1.5), m.rot + t * 0.15 * (m.b - 1));
       }
       ctx.strokeStyle = 'rgba(205,232,242,' + [0.18, 0.34, 0.56][b] * alpha + ')';
       ctx.stroke();

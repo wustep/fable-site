@@ -101,7 +101,7 @@
         R1[i] = r(); R2[i] = r(); R3[i] = r(); PH[i] = r() * TAU;
         FJ[i] = (r() * world.NF) | 0; FXN[i] = r(); FD[i] = 0.004 + r() * 0.07;
         FSC[i] = world.floorScale(FJ[i]);
-        TH[i] = 0.02 + 0.085 * (0.65 * (1 - FSC[i]) + 0.35 * r()); // the near ones wake first; the far ones stream in after
+        TH[i] = 0.008 + 0.09 * (0.65 * (1 - FSC[i]) + 0.35 * r()); // the near ones wake first (at the visitor's first touch of the scroll); the far ones stream in after
         FOX[i] = r() + r() + r() - 1.5; FOY[i] = r() + r() + r() - 1.5;
         HX[i] = r(); HL[i] = 2 + ((r() * 3) | 0); HH[i] = 0.01 + r() * r() * 0.16;
         STX[i] = r(); STY[i] = 0.02 + Math.pow(r(), 1.3) * 0.72;
@@ -267,11 +267,13 @@
         const tt = t - r2 * 1.7;
         heart(tt, hc);
         const spread = (1 + 0.28 * Math.sin(tt * 0.4)) * lerp(1, 0.8, wSweep);
-        // waves of closeness pass through a flock; that is most of what makes it look alive
+        // a flock is a sheet that keeps twisting: where we see it edge-on it darkens to a band, face-on it thins to lace.
+        // that, and the waves of closeness running down its length, are most of what makes it look alive
         const a = FOX[i] + 0.27 * Math.sin(2.6 * FOX[i] - 1.9 * tt + 1.3 * FOY[i]);
-        const b = FOY[i] + 0.2 * Math.sin(2.1 * FOY[i] + 1.3 * tt + FOX[i]);
-        const ox = a * Math.max(W * 0.2, H * 0.15) * spread * stretch;
-        const oy = (b * H * 0.085 + Math.sin(FOX[i] * 2.6 + tt * 1.1) * H * 0.055) * spread;
+        const twist = 1.35 * Math.sin(1.3 * FOX[i] - 0.9 * tt) + 0.75 * Math.sin(0.7 * FOX[i] + 0.53 * tt + 1);
+        const Sx = Math.max(W * 0.2, H * 0.15) * spread;
+        const ox = a * Sx * stretch + FOY[i] * Math.sin(twist) * Sx * 0.2;
+        const oy = (FOY[i] * Math.cos(twist) * H * 0.1 + Math.sin(FOX[i] * 2.6 + tt * 1.1) * H * 0.055) * spread;
         const qx = hc[0] + ox * hca - oy * hsa, qy = hc[1] + ox * hsa + oy * hca;
         if (wC < 1) { tx = lerp(tx, qx, wC); ty = lerp(ty, qy, wC); } else { tx = qx; ty = qy; }
         al = lerp(al, lerp(0.9, 0.5, ss(0.69, 0.74, p)), wC); sz = lerp(sz, lerp(0.7 + r3 * 0.5, 0.45, ss(0.69, 0.74, p)), wC); k = lerp(k, 0.02, wC);
