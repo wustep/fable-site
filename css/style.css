@@ -1,0 +1,86 @@
+html, body { margin: 0; padding: 0; background: #e3d9be; overflow-x: hidden; }
+body { min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+@media (pointer: fine) { body, body * { cursor: none !important; } }
+
+.fixed { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; display: block; }
+#paper { z-index: 0; }
+
+.light {
+  position: fixed; inset: -20% -40%; z-index: 1; pointer-events: none;
+  mix-blend-mode: multiply;
+  background: linear-gradient(104deg, transparent 36%, rgba(206,160,110,.20) 46%, rgba(214,150,110,.10) 53%, transparent 64%);
+  animation: beam 34s ease-in-out infinite alternate;
+}
+.glow {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(circle 46vmax at var(--mx, 50%) var(--my, 40%), rgba(255,214,150,.20), rgba(255,214,150,0) 70%);
+  transition: opacity .6s;
+}
+@keyframes beam { from { transform: translateX(-18%); } to { transform: translateX(18%); } }
+
+main { position: relative; z-index: 2; }
+.s { position: relative; overflow: hidden; }
+.s > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.s0 { height: 100vh; }
+.s1 { height: 150vh; }
+.s2 { height: 140vh; }
+.s3 { height: 140vh; background: linear-gradient(rgba(23,20,16,0), #17140f 3vh, #17140f calc(100% - 3vh), rgba(23,20,16,0)); }
+.s4 { height: 160vh; }
+.s5 { height: 230vh; }
+.s5 .map { height: 110vh; }
+.s5 .sky { top: 110vh; height: 120vh; }
+.s5 .end { position: absolute; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; }
+
+/* hanging scrolls */
+.s2 .rail { position: absolute; left: -2%; right: -2%; top: 3vh; height: 2px; background: #3a3028; opacity: .55; }
+.s2 .disc { position: absolute; left: 58%; top: 46%; width: 68vmin; height: 68vmin; transform: translate(-50%, -50%); will-change: transform; }
+.s2 .disc canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.panel { position: absolute; top: 3vh; will-change: transform; }
+.panel .sway {
+  position: relative; overflow: hidden; width: 100%; height: 100%;
+  transform-origin: 50% 0;
+  animation: sway var(--dur, 10s) ease-in-out infinite alternate;
+  animation-delay: var(--delay, 0s);
+  background: rgba(242,234,214,.66);
+  box-shadow: 0 46px 46px -40px rgba(50,35,15,.5), inset 0 0 0 1px rgba(80,60,40,.10);
+}
+.panel .sway::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(90deg, rgba(80,60,40,.05) 0 1px, transparent 1px 3px);
+}
+.panel .sway::after { content: ""; position: absolute; left: -2%; right: -2%; top: 0; height: 3px; background: #3a3028; opacity: .8; }
+.panel canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+@keyframes sway { from { transform: rotate(-.45deg) skewX(.25deg); } to { transform: rotate(.45deg) skewX(-.25deg); } }
+.p1 { left: 5%;  width: 19vw; height: 96vh;  --dur: 11s; }
+.p2 { left: 23%; width: 25vw; height: 118vh; --dur: 13s; --delay: -4s; }
+.p3 { left: 46%; width: 21vw; height: 104vh; --dur: 9.5s; --delay: -2s; }
+.p4 { left: 64%; width: 16vw; height: 86vh;  --dur: 12s; --delay: -7s; }
+.p5 { left: 78%; width: 18vw; height: 110vh; --dur: 10s; --delay: -5s; }
+.s2 .beam {
+  position: absolute; inset: 0 -30%; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(100deg, transparent 40%, rgba(255,226,180,.30) 48%, rgba(255,205,160,.18) 54%, transparent 64%);
+  animation: beam 21s ease-in-out infinite alternate;
+}
+@media (max-width: 720px) {
+  .p1 { left: 2%;  width: 30vw; height: 88vh; }
+  .p2 { left: 30%; width: 38vw; height: 112vh; }
+  .p3 { left: 66%; width: 32vw; height: 98vh; }
+  .p4, .p5 { display: none; }
+  .s2 .disc { left: 50%; top: 42%; width: 86vmin; height: 86vmin; }
+}
+
+#thread { z-index: 5; }
+#trail { z-index: 6; }
+#grain { z-index: 7; opacity: .075; mix-blend-mode: multiply; }
+.cur {
+  position: fixed; z-index: 9; left: 0; top: 0; width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  border-radius: 50%; background: #2b2622; pointer-events: none; opacity: 0;
+  transition: width .25s, height .25s, margin .25s, opacity .3s;
+}
+@media (pointer: fine) { .cur { opacity: .9; } }
+.cur.big { width: 22px; height: 22px; margin: -11px 0 0 -11px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .light, .s2 .beam, .panel .sway { animation: none; }
+}

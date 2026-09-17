@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>○</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23e3d9be'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%232b2622'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="paper" class="fixed" aria-hidden="true"></canvas>
+<div class="light" aria-hidden="true"></div>
+<div class="glow" aria-hidden="true"></div>
+
+<main role="presentation">
+  <section class="s s0"><canvas aria-hidden="true"></canvas></section>
+
+  <section class="s s1"><canvas aria-hidden="true"></canvas></section>
+
+  <section class="s s2">
+    <div class="disc"><canvas aria-hidden="true"></canvas></div>
+    <div class="rail" aria-hidden="true"></div>
+    <div class="panel p1"><div class="sway"><canvas aria-hidden="true"></canvas></div></div>
+    <div class="panel p2"><div class="sway"><canvas aria-hidden="true"></canvas></div></div>
+    <div class="panel p3"><div class="sway"><canvas aria-hidden="true"></canvas></div></div>
+    <div class="panel p4"><div class="sway"><canvas aria-hidden="true"></canvas></div></div>
+    <div class="panel p5"><div class="sway"><canvas aria-hidden="true"></canvas></div></div>
+    <div class="beam" aria-hidden="true"></div>
+  </section>
+
+  <section class="s s3"><canvas aria-hidden="true"></canvas></section>
+
+  <section class="s s4"><canvas aria-hidden="true"></canvas></section>
+
+  <section class="s s5">
+    <canvas class="map" aria-hidden="true"></canvas>
+    <canvas class="sky" aria-hidden="true"></canvas>
+    <div class="end" role="presentation"></div>
+  </section>
+</main>
+
+<canvas id="thread" class="fixed" aria-hidden="true"></canvas>
+<canvas id="trail" class="fixed" aria-hidden="true"></canvas>
+<canvas id="grain" class="fixed" aria-hidden="true"></canvas>
+<div class="cur" aria-hidden="true"></div>
+
+<script src="js/util.js"></script>
+<script src="js/paper.js"></script>
+<script src="js/scene-dot.js"></script>
+<script src="js/scene-tree.js"></script>
+<script src="js/scene-scrolls.js"></script>
+<script src="js/scene-stars.js"></script>
+<script src="js/scene-moon.js"></script>
+<script src="js/scene-frontier.js"></script>
+<script src="js/thread.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
