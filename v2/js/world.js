@@ -74,9 +74,9 @@
     let v = tintCache.get(k);
     if (!v) {
       // (at night it should read as a silhouette, so it sinks toward the darker sheet in front of it)
-      const p = S.p, cols = ramp(world.HILL, p), hill = mixc(cols[l], cols[Math.min(4, l + 1)], 0.7 * S.night);
-      const amt = (1 - ss(0.47, 0.57, p)) * 0.35 + ss(0.69, 0.775, p) * (soft ? 0.5 : 0.8) + ss(0.78, 0.89, p) * (soft ? 0.17 : 0.2) + (l < 2 ? 0.25 : 0);
-      const c = mixc(world.PAINT[idx], mixc(hill, [255, 236, 214], lerp(0.16, 0.07, S.night)), Math.min(0.94, amt));
+      const p = S.p, cols = ramp(world.HILL, p), dn = ss(0.69, 0.775, p), hill = mixc(cols[l], cols[Math.min(4, l + 1)], 0.75 * dn);
+      const amt = (1 - ss(0.47, 0.57, p)) * 0.35 + ss(0.69, 0.775, p) * (soft ? 0.58 : 0.8) + ss(0.78, 0.89, p) * (soft ? 0.17 : 0.2) + (l < 2 ? 0.25 : 0);
+      const c = mixc(world.PAINT[idx], mixc(hill, [255, 236, 214], lerp(0.16, 0.05, dn)), Math.min(0.94, amt));
       v = css(c);
       tintCache.set(k, v);
     }
@@ -116,7 +116,8 @@
   // the far shore is a headland: it tapers into open water so the sun can set in the sea
   world.farHeight = (l, x) => {
     const xn = x / W, u = x / H;
-    return l === 0 ? (0.08 + 0.036 * wave(0, u)) * ss(0.68, 0.4, xn) : (0.036 + 0.022 * wave(1, u)) * ss(0.52, 0.24, xn);
+    const k = Math.min(1, Math.max(0.55, (W / H) * 0.9));
+    return (l === 0 ? (0.08 + 0.036 * wave(0, u)) * ss(0.68, 0.4, xn) : (0.036 + 0.022 * wave(1, u)) * ss(0.52, 0.24, xn)) * k;
   };
   world.ridgeY = (l, x, S) => (l < 2 ? S.horizonY - S.farRise * world.farHeight(l, x) * H + 1 : (LB[l] + LA[l] * wave(l, x / H)) * H + S.off[l]);
 
@@ -147,7 +148,7 @@
     S.wA = ss(0.4, 0.47, p); // water seen from inside -> from above
     S.dayness = ss(0.37, 0.41, p) * (1 - ss(0.705, 0.755, p));
     S.night = ss(0.78, 0.9, p);
-    S.home = ss(0.715, 0.8, p); // people are home; lamps are lit
+    S.home = ss(0.7, 0.765, p); // people are home; lamps are lit
     S.farRise = easeOut(ss(0.455, 0.55, p));
     S.skyRot = 0.09 * Math.sin(S.t * 0.013); // the night sky wheels, very slowly, about a point far below the horizon
     S.pivotX = S.W * 0.5; S.pivotY = S.horizonY + h * 0.45;

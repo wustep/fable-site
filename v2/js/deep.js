@@ -228,12 +228,13 @@
 
   // also falls, faintly, from the night sky at the very end: it begins again
   deep.snow = function (ctx, S, alpha, settle) {
-    const t = S.t, span = H * 1.3;
+    const t = S.t, span = H * 1.3, nSnow = Math.round(snow.length * V.clamp((W * H) / 1.2e6, 0.4, 1)); // fewer on small screens, so it stays snow and not rain
     ctx.lineWidth = 1;
     ctx.lineCap = 'round';
     for (let b = 0; b < 3; b++) {
       ctx.beginPath();
-      for (const m of snow) {
+      for (let q = 0; q < nSnow; q++) {
+        const m = snow[q];
         if (m.b !== b) continue;
         const par = 0.35 + m.z * 0.8;
         let y = (m.y * span + t * m.sp * 9 * par + (settle ? S.camY * H * par : 0)) % span;

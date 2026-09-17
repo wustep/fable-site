@@ -57,10 +57,11 @@
   } else S.p = targetP();
 
   // ---------------------------------------------------------------- the visitor
-  let mouseInside = false, lastTouch = -99, lastMove = -99, lastInput = 0, auto = 0, autoY = 0, mx = 0, my = 0;
+  let mouseInside = false, lastTouch = -99, lastMove = -99, lastInput = 0, auto = 0, autoY = 0, mx = 0, my = 0, swipe = 0;
   const touched = (hold) => { lastInput = Math.max(lastInput, S.t + hold); auto = 0; };
   const point = (e, pause) => {
     const far = Math.abs(e.clientX - mx) + Math.abs(e.clientY - my) > 3;
+    if (S.px > -1e3) swipe += Math.hypot(e.clientX - S.px, e.clientY - S.py);
     S.px = e.clientX; S.py = e.clientY;
     if (e.pointerType === 'mouse') mouseInside = true; else lastTouch = S.t;
     if (far) { mx = e.clientX; my = e.clientY; lastMove = S.t; touched(pause); }
@@ -112,6 +113,9 @@
     const quiet = here && S.t - lastMove > 0.9 ? 1 : 0;
     S.pActive += (here - S.pActive) * (1 - Math.exp(-dt * (here ? 6 : 1.2)));
     S.still += (quiet - S.still) * (1 - Math.exp(-dt * (quiet ? 1.6 : 3)));
+    // how briskly the hand is moving: run it through the lights and they part like water
+    S.rush = (S.rush || 0) + (Math.min(1, swipe / dt / 1800) - (S.rush || 0)) * (1 - Math.exp(-dt * 5));
+    swipe = 0;
 
     V.phase(S);
     ctx.setTransform(S.dpr, 0, 0, S.dpr, 0, 0);

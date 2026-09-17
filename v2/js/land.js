@@ -58,6 +58,12 @@
     const order = land.windows.map((_, i) => i);
     for (let i = order.length - 1; i > 0; i--) { const j = (r() * (i + 1)) | 0; [order[i], order[j]] = [order[j], order[i]]; }
     order.forEach((wi, rank) => { land.windows[wi].thr = 0.748 + 0.095 * (rank / Math.max(1, order.length - 1)); });
+    // ...and its own bedtime. a few never sleep: someone is up late, and not alone
+    land.windows.forEach((w) => { w.sleep = 0.9 + r() * 0.075; w.owl = false; w.home = 0; });
+    const near = land.windows.filter((w) => w.l === 2); // (the row of houses still in view once we are looking up)
+    for (let k = 0; k < Math.min(3, near.length); k++) near[(r() * near.length) | 0].owl = true;
+    const across = land.windows.filter((w) => w.l === 1);
+    if (across.length) across[(r() * across.length) | 0].owl = true; // and one lamp across the water
 
     farTrees = [];
     for (let l = 0; l < 2; l++) {
@@ -129,9 +135,10 @@
   // ---------------------------------------------------------------- per frame, before the lights move
   land.layout = function (S) {
     for (const hs of houses) {
-      const yb = Math.max(world.ridgeY(hs.l, hs.x - hs.w / 2, S), world.ridgeY(hs.l, hs.x + hs.w / 2, S)) + 1;
+      let yb = Math.max(world.ridgeY(hs.l, hs.x - hs.w / 2, S), world.ridgeY(hs.l, hs.x + hs.w / 2, S)) + 1;
+      if (hs.l < 2) yb += (1 - S.farRise) * (hs.h + hs.roofH) * 1.4; // the far shore's houses come up over the horizon with their hill, not before it
       hs.yb = yb;
-      for (const w of hs.wins) { w.x = hs.x + w.rx; w.y = yb - w.ry; }
+      for (const w of hs.wins) { w.x = hs.x + w.rx; w.y = yb - w.ry; w.home = S.home * (w.owl ? 1 : 1 - ss(w.sleep, w.sleep + 0.012, S.p)); }
     }
   };
 
@@ -227,7 +234,8 @@
       ctx.lineWidth = 1.4;
       for (const wn of land.windows) {
         if (wn.l !== 1) continue;
-        const a = S.home * 0.4 + wn.glow * 0.45;
+        const a = wn.home * 0.4 + wn.glow * 0.45;
+        if (a < 0.01) continue;
         for (let k = 0; k < 6; k++) {
           const hw = wn.w * (0.9 + k * 0.35) * (0.65 + 0.35 * Math.sin(t * 2.2 + k * 1.3 + wn.phase * 9));
           const yy = S.horizonY + 3 + k * 4.5;
@@ -289,7 +297,9 @@
     // the lit edge of cut paper
     ctx.beginPath();
     for (let x = 0; x <= W + 10; x += 10) { const y = world.ridgeY(l, x, S) + 0.75; x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
-    ctx.strokeStyle = 'rgba(255,255,255,' + lerp(0.24, 0.05, ss(0.69, 0.77, S.p)) * (l < 2 ? 0.6 : 1) + ')';
+    // (white by day; at sunset the low sun catches it; at night almost nothing does)
+    const rim = ss(0.68, 0.76, S.p) * (1 - ss(0.79, 0.87, S.p));
+    ctx.strokeStyle = css(mixc([255, 255, 255], [255, 176, 110], rim), (lerp(0.24, 0.05, ss(0.69, 0.77, S.p)) + rim * 0.4) * (l < 2 ? 0.6 : 1));
     ctx.lineWidth = 1.5;
     ctx.stroke();
   }
@@ -355,7 +365,7 @@
         ctx.fillStyle = 'rgba(235,225,235,1)';
         for (let k = 0; k < 5; k++) {
           const a = (S.t * 0.11 + k / 5 + hs.ph) % 1;
-          ctx.globalAlpha = 0.2 * S.home * Math.sin(Math.PI * a) * (1 - S.night * 0.4);
+          ctx.globalAlpha = 0.2 * S.home * Math.sin(Math.PI * a) * (1 - 0.75 * ss(0.88, 0.97, S.p));
           ctx.beginPath();
           ctx.arc(cx + Math.sin(a * 5 + hs.ph + k) * size * 0.1 + a * size * 0.35, top - roofH - a * size * 1.5, size * (0.05 + a * 0.12), 0, TAU);
           ctx.fill();
@@ -402,7 +412,7 @@
       ctx.fillStyle = tint(21, l, false, S);
       ctx.fillRect(wx, wy, wn.w, wn.h);
       // their own lamp: people have their own light. a visit only makes the room livelier
-      const home = S.home * (0.46 + 0.05 * Math.sin(S.t * 0.7 + wn.phase * 30));
+      const home = wn.home * (0.46 + 0.05 * Math.sin(S.t * 0.7 + wn.phase * 30));
       const talk = wn.glow > 0.01 ? land.talk(wn, S.t)[0] : 0;
       const lit = Math.min(1, home + wn.glow * (0.34 + 0.3 * talk));
       if (lit > 0.01) {

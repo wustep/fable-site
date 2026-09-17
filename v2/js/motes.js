@@ -194,7 +194,7 @@
     const rc = Math.cos(S.skyRot), rs = Math.sin(S.skyRot);
     const cC = portrait ? [[0.3, 0.13], [0.7, 0.31], [0.34, 0.5]] : [[0.2, 0.3], [0.5, 0.23], [0.8, 0.31]];
     const cScale = m0 * (portrait ? 0.15 : 0.15);
-    const repelR = m0 * 0.13;
+    const repelR = m0 * (0.13 + 0.13 * (S.rush || 0));
     for (const w of wins) w.target = 0;
     const spinBoost = 5 * Math.exp(-(t - (S.clickT || -99)) * 2.2);
     compAngle += (1.1 + spinBoost) * S.dt;
@@ -206,7 +206,8 @@
       const wB = ss(TH[i], TH[i] + 0.045, p);
       const wC = ss(0.365 + r1 * 0.04, 0.405 + r1 * 0.04, p);
       const wD = ss(0.705 + r2 * 0.05, 0.765 + r2 * 0.05, p);
-      const wE = isWin ? 0 : ss(0.855 + r3 * 0.05, 0.92 + r3 * 0.05, p);
+      // (a light that is visiting stays until its window sleeps, then follows the others up; the night owls keep theirs)
+      const wE = isWin ? (wins[i - 1].owl ? 0 : ss(wins[i - 1].sleep, wins[i - 1].sleep + 0.05, p)) : ss(0.855 + r3 * 0.05, 0.92 + r3 * 0.05, p);
 
       let tx = 0, ty = 0, al = 0.1, sz = 0.5, k = 0.012;
 
@@ -279,8 +280,8 @@
         let qx, qy, qa, qs, visiting = 0;
         if (isWin) {
           const w = wins[i - 1];
-          // each window has its own moment in the evening; visits end, and begin again; by the end of the night no one is alone
-          visiting = p > w.thr && (p > 0.93 || (t / w.period + w.phase) % 1 < w.duty) ? 1 : 0;
+          // each window has its own moment in the evening; visits end, and begin again; late at night the town sleeps, except where someone can't
+          visiting = p > w.thr && (w.owl ? p > 0.9 || (t / w.period + w.phase) % 1 < w.duty : p < w.sleep && (t / w.period + w.phase) % 1 < w.duty) ? 1 : 0;
           if (visiting) {
             const talk = land.talk(w, t)[1];
             qx = w.x + Math.sin(t * 0.8 + ph) * w.w * 0.18; qy = w.y + Math.cos(t * 1.1 + ph) * w.h * 0.15;
