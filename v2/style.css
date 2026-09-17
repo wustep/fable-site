@@ -16,7 +16,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
   height: 100%;
   display: block;
 }
-#c { touch-action: pan-y; cursor: crosshair; }
+#c { touch-action: pan-y; cursor: crosshair; animation: arrive 2.2s ease-out both; }
+@keyframes arrive { from { opacity: 0; } to { opacity: 1; } }
 
 #grain {
   pointer-events: none;
